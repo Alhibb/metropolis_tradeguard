@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -28,7 +26,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# Local environment files; only the blank template belongs in Git.
 .env*
 
 # vercel
@@ -50,3 +48,16 @@ next-env.d.ts
 
 # Generated TypeScript cache
 *.tsbuildinfo
+
+# Credentials and wallet exports
+/.aws/
+/secrets/
+/wallets/
+*.key
+*.keystore
+*.p12
+*.pfx
+
+# Windows metadata
+Thumbs.db
+Desktop.ini

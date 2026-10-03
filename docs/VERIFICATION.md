@@ -1,8 +1,8 @@
 # Verification record — 2026-10-02
 
-## Passed in this run
+## Checks completed on 2 October 2026
 
-- TypeScript: `pnpm exec tsc --noEmit`. Fixed a typed-key indexing error in the live Qwen verification helper discovered during this run.
+- TypeScript: `pnpm exec tsc --noEmit`. The live Qwen helper's typed-key indexing issue was fixed before this check.
 - Domain/extraction: 11/11 tests passed.
 - Solidity compilation and local EVM: 7/7 tests passed. Full 2500 TGT funding, 2250/250 allocation and both withdrawals, role/consent checks, pause behavior and multi-order accounting are covered. Ganache used its JavaScript fallback on Node 24.
 - Production build: passed after the user stopped the previous preview, which had locked `dist` on Windows.
@@ -17,7 +17,7 @@
 
 ## Scope and remaining verification
 
-No live-wallet trade was submitted by this run. Next trade ID 1 means the deployed escrow has no created trades at the time of the check. Local EVM tests and sandbox activity are not Monad transaction proof. Three funded distinct wallets and a user-signed rehearsal are required.
+No live-wallet trade was submitted during these checks. Next trade ID 1 means the deployed escrow had no created trades. The wallet rehearsal requires three distinct funded accounts; local EVM tests and sandbox activity cover different parts of the application.
 
 Browser PDF import and a complete UI-only create-to-withdraw walkthrough were not verified. End-to-end mutation coverage was through the local API scripts. Browser export was clicked, but the download observer timed out; exported-file retrieval is not counted as passed. Evidence byte retrieval passed through API checks.
 
@@ -28,3 +28,7 @@ Hosted Qwen and contract configuration, external judge access, recording and fin
 ## Reproduce
 
 See README for commands, deployment addresses, wallet runbook, screenshots and submission steps. Stop the Windows preview before rebuilding, then run `pnpm local`. API scripts create synthetic records and need the localhost server. Never run identity fixtures against a remote service or expose the raw worker publicly.
+
+## 3 October repository review
+
+Read-only deployed checks passed again; next trade ID remained 1. The submission repository is now Alhibb/metropolis_tradeguard. Team details and the pending video are in SUBMISSION_ENTRY.md. Documentation was revised for clarity and current behavior; this was an editorial/source review, not an audit or new model benchmark. Tests above retain their original 2 October date.

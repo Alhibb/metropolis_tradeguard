@@ -1,5 +1,6 @@
 {
-  "name": "site-creator-vinext-starter",
+  "name": "metropolis-tradeguard",
+  "description": "DevClans TradeGuard: reviewed trade agreements, delivery evidence and Monad testnet escrow.",
   "version": "0.1.0",
   "private": true,
   "engines": {

@@ -1,33 +1,28 @@
-# Submission status — 2026-10-02
+# Submission checklist
 
-## Completed
+Updated 3 October 2026.
 
-- GitHub repository: https://github.com/Alhibb/TradeGuard (previous source push verified on main).
-- Site published: https://devclans-tradeguard.alhibb.chatgpt.site/; audience remains owner-only.
-- Local Singapore Qwen enabled; live sample browser extraction and full Qwen-backed API workflow passed.
-- TGT deployed: 0xfcc80262fccc19b3a833e2453e52316a0edf5f3b.
-- Escrow deployed: 0x27ba251f396277a9af8ca7cf2cde4a279582f83a.
-- Read-only on-chain code, chain, linkage and six-decimal TGT checks passed.
-- TypeScript, production build, 11 domain/extraction tests, 7 EVM tests and complete local API demo passed.
-- Browser screenshots, README setup/deployment/demo guides, verification record and Metropolis submission guide prepared.
-- Official event page read; application platform identified: https://hackathon.monad.xyz/.
+## Ready
 
-## Still required before submission
+- [x] Team: DevClans — Ibrahim Rabiu (Developer), Mardiyya Sulaiman (UI Developer).
+- [x] Submission repository: https://github.com/Alhibb/metropolis_tradeguard.
+- [x] Custom README, seven screenshots and setup/demo guides.
+- [x] `.gitignore` covers environment files, wallet exports, build output and runtime state.
+- [x] Source and documentation checked for secret patterns and stale claims.
+- [x] TGT and escrow deployed; read-only chain/code/token checks passed.
+- [x] Local Qwen sample and complete API demo passed on 2 October.
+- [x] TypeScript, build, 11 domain/extraction tests and 7 local EVM tests passed on 2 October.
+- [x] Project text and submission instructions prepared.
 
-1. Configure hosted Qwen via supported secure secret entry and hosted public contract addresses; deploy environment changes and verify.
-2. Choose judge access explicitly and verify access from a judge account. The current owner-only Site is not a general judge-accessible demo.
-3. Perform the three-wallet Monad trade, settlement and both withdrawals. Latest next trade ID was 1; no created live trade yet. Save real receipt/explorer links.
-4. Record a demo in the platform's required format and length. No video has been recorded.
-5. Complete the project/team profile, confirm exact cutoff timezone and rules, identify eligible build-window work, review and submit. No entry has been submitted.
+## Before final submission
 
-The official overview lists 13 October as the deadline, judging 14–27 October and winners 3 November. Confirm exact year/time/timezone and current requirements in the platform.
+- [ ] Set hosted Qwen securely and configure hosted contract addresses.
+- [ ] Choose judge access and verify the app from the intended audience.
+- [ ] Complete the signed three-wallet Monad trade and save transaction proof. The latest check on 3 October returned next trade ID 1.
+- [ ] Attach the demo video; the team will provide it later.
+- [ ] Complete contact/team fields, confirm cutoff and rules, identify eligible build-window work.
+- [ ] Submit in the portal and save its confirmation/profile URL.
 
-## Materials
+The app is https://devclans-tradeguard.alhibb.chatgpt.site/ and currently owner-only. The portal is https://hackathon.monad.xyz/. The entry has not been submitted.
 
-- README.md: all local setup, Qwen, contract deployment, sandbox and wallet guides with screenshots.
-- docs/METROPOLIS_SUBMISSION.md: official requirements, copy-ready pitch and checklist.
-- docs/VERIFICATION.md: dated test results and limits.
-- docs/DEMO_NARRATION.md: proposed narration, not a video.
-- docs/screenshots/: real local browser captures, not chain transaction proof.
-
-The older outputs/TradeGuard-source.zip is a historical snapshot, not the latest documentation package.
+See [the portal guide](METROPOLIS_SUBMISSION.md), [ready-to-paste entry](SUBMISSION_ENTRY.md), and [verification results](VERIFICATION.md).
