@@ -68,7 +68,7 @@ pnpm build
 pnpm local
 ```
 
-Open http://127.0.0.1:5173/ and sign in to the local demo. Stop with Ctrl+C. On Windows, stop the app before rebuilding; restart after changing `.env`.
+Open http://127.0.0.1:5173/. The homepage button currently points to `#`. To enter the local demo, visit http://127.0.0.1:5173/signin-with-chatgpt?return_to=%2F directly. Stop with Ctrl+C. On Windows, stop the app before rebuilding; restart after changing `.env`.
 
 The local sign-in fixture is for development. Production uses the hosted Site's sign-in boundary. D1/R2 data persists in `.wrangler/state`; keep both local ports private.
 
@@ -112,6 +112,8 @@ docs/                Setup, demo, review and submission material
 The server validates extraction fields and filters source quotes. Buyers and suppliers review the result before saving. Documents stay off-chain; the testnet workflow publishes salted commitments and transaction data.
 
 ## Verification
+
+The 5 October navigation check passed the production build, TypeScript, all seven sidebar destinations, trade-detail tabs, search/status filtering, disputed-only records and mobile menu closing. No browser warnings or errors were reported. Wallet transactions were not part of that check.
 
 The 2 October check passed TypeScript, production build, **11 domain/extraction tests**, **7 local EVM tests**, and the full persisted API demo, including evidence bytes, 90/10 settlement, both withdrawals and access checks.
 

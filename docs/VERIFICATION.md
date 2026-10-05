@@ -32,3 +32,17 @@ See README for commands, deployment addresses, wallet runbook, screenshots and s
 ## 3 October repository review
 
 Read-only deployed checks passed again; next trade ID remained 1. The submission repository is now Alhibb/metropolis_tradeguard. Team details and the pending video are in SUBMISSION_ENTRY.md. Documentation was revised for clarity and current behavior; this was an editorial/source review, not an audit or new model benchmark. Tests above retain their original 2 October date.
+
+## 5 October navigation verification
+
+- Production build and TypeScript passed. Build warnings concerned plugin timing only.
+- All seven desktop sidebar destinations rendered their intended views.
+- Trades search and status filtering passed; navigating cleared filters and selected trades.
+- Evidence aggregated records and opened the corresponding Delivery evidence tab. Agreement and Activity tabs also passed.
+- Escrow and Monad testnet loaded the existing Testnet component. Setup displayed the configured public network/token/escrow values and active styling.
+- A synthetic local dispute, TG-36E8DA, verified the disputed-only list and Overview action link. It remains in local state.
+- Mobile Evidence and Trades navigation passed at 390 × 844; the sidebar closed after selection. Mobile Setup also rendered.
+- Unauthenticated orders and config requests returned 401. No browser warnings or errors were reported.
+- The homepage link points to `#` at the owner’s request. Authentication and API routes remain unchanged; local testing entered through the existing development sign-in fixture.
+
+These checks did not send Monad wallet transactions or verify a hosted deployment.

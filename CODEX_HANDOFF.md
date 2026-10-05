@@ -16,7 +16,7 @@ Use the existing project and lockfile. Run `pnpm build`, then `pnpm local`. Stop
 
 `.env` is ignored and may contain live Qwen credentials. Do not print it, include it in archives, or copy it into the repository. The hosted runtime needs separate configuration; local settings are not automatically published.
 
-The Git checkout used for publishing is `.sites-runtime/publish-checkout`. Preserve the source history and use explicit file lists when syncing. Runtime files, dependencies and secrets are excluded.
+The project root is now the Git checkout, with origin pointing to Alhibb/metropolis_tradeguard. Preserve existing history and stage explicit file lists. The older `.sites-runtime/publish-checkout` is not needed for current pushes. Runtime files, dependencies and secrets are excluded.
 
 ## Contracts
 
@@ -32,6 +32,8 @@ Deadlines are advisory after funding. Arbitration unavailability plus refusal of
 ## Verification
 
 On 2 October 2026, TypeScript, build, 11 domain/extraction tests, 7 EVM tests and the complete local API demo passed. Screenshots are in `docs/screenshots/`. See `docs/VERIFICATION.md` for boundaries and remaining checks.
+
+The 5 October navigation check passed production build, TypeScript, desktop/mobile sidebar navigation, search/status filtering, evidence deep links and trade-detail tabs. The homepage CTA is intentionally `#`; local testing uses the existing sign-in fixture URL directly. A synthetic disputed trade TG-36E8DA remains in local state. No live wallet transactions were tested.
 
 ## Submission work still open
 

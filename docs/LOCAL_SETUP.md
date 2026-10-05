@@ -14,7 +14,7 @@ pnpm build
 pnpm local
 ```
 
-Open http://127.0.0.1:5173/ and choose **Sign in to your workspace**. Use a regular browser with a wallet extension for the Monad segment. The in-app browser supports the sandbox but may have no wallet provider.
+Open http://127.0.0.1:5173/. The homepage button currently points to `#`; enter the local authenticated demo by visiting http://127.0.0.1:5173/signin-with-chatgpt?return_to=%2F directly. Use a regular browser with a wallet extension for the Monad segment. The in-app browser supports the sandbox but may have no wallet provider.
 
 The launcher initializes D1 idempotently and retains D1/R2 state in `.wrangler/state`. The localhost sign-in fixture runs on port 5173, with a worker on 8787. This is development-only authentication; do not expose either port publicly.
 
