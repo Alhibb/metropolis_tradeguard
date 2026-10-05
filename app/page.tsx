@@ -1,4 +1,4 @@
 import TradeGuard from './tradeguard';
-import {getChatGPTUser} from './chatgpt-auth';
+import {walletUser} from '@/lib/tradeguard/wallet-auth';
 export const dynamic='force-dynamic';
-export default async function Page(){const user=await getChatGPTUser();return <TradeGuard signedIn={!!user} displayName={user?.displayName??'Your workspace'} />;}
+export default async function Page(){const user=await walletUser();return <TradeGuard signedIn={!!user} displayName={user?.displayName??'Your workspace'} />;}

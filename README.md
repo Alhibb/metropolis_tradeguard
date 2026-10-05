@@ -68,9 +68,9 @@ pnpm build
 pnpm local
 ```
 
-Open http://127.0.0.1:5173/. The homepage button currently points to `#`. To enter the local demo, visit http://127.0.0.1:5173/signin-with-chatgpt?return_to=%2F directly. Stop with Ctrl+C. On Windows, stop the app before rebuilding; restart after changing `.env`.
+Open http://127.0.0.1:5173/ in a browser with MetaMask and choose **Sign in with MetaMask**. Approve account access and sign the login message. Stop with Ctrl+C. On Windows, stop the app before rebuilding; restart after changing `.env`.
 
-The local sign-in fixture is for development. Production uses the hosted Site's sign-in boundary. D1/R2 data persists in `.wrangler/state`; keep both local ports private.
+Workspace authentication uses a wallet-signed login message and a server-verified session. The old local ChatGPT sign-in fixture does not authenticate wallet workspaces. D1/R2 data persists in `.wrangler/state`; keep both local ports private.
 
 | Guide | Contents |
 | --- | --- |
@@ -184,7 +184,7 @@ pnpm build
 pnpm local
 ```
 
-Open http://127.0.0.1:5173/. The homepage button currently points to `#`; enter the local authenticated demo by visiting http://127.0.0.1:5173/signin-with-chatgpt?return_to=%2F directly. Use a regular browser with a wallet extension for the Monad segment. The in-app browser supports the sandbox but may have no wallet provider.
+Open http://127.0.0.1:5173/ in MetaMask’s browser or a desktop browser with the MetaMask extension. Choose **Sign in with MetaMask** and sign the login message. Use a regular browser with a wallet extension for the Monad segment. The in-app browser supports the sandbox but may have no wallet provider.
 
 The launcher initializes D1 idempotently and retains D1/R2 state in `.wrangler/state`. The localhost sign-in fixture runs on port 5173, with a worker on 8787. This is development-only authentication; do not expose either port publicly.
 
@@ -618,3 +618,25 @@ Read-only deployed checks passed again; next trade ID remained 1. The submission
 These checks did not send Monad wallet transactions or verify a hosted deployment.
 
 </details>
+
+
+## Wallet sign-in
+
+MetaMask requests account access and a Sign-In with Ethereum message. Login does not send a transaction, spend gas or grant a token allowance. The server verifies the exact message and signature, checks its origin and five-minute expiry, and consumes its nonce once. A random session token is stored in an HttpOnly, SameSite=Strict cookie (Secure on HTTPS); only its hash is stored in R2. Sessions last one day and Sign out revokes them.
+
+Saved records belong to the authenticated wallet address. Signing in with a different address opens a different workspace. Previous ChatGPT-owned records are not automatically reassigned to wallets. The existing R2 binding stores authentication records under `auth/`; no extra API key, database migration or contract deployment is needed. This login supports standard externally owned MetaMask accounts. Smart-contract wallet signature verification is not included.
+
+The earlier API verification scripts use the old local identity fixture and need wallet-session updates before rerunning. Their dated results above describe the previous authentication setup.
+
+Wallet-auth verification on 5 October 2026 passed signed login, invalid message/signature rejection, concurrent nonce claim and replay rejection, forged-header denial, token tampering, protected POST denial after logout, and separate-wallet record isolation. `scripts/verify-wallet-auth.ts` runs against a localhost-only Worker on port 8788; it uses generated test accounts, creates synthetic records and sends no blockchain transactions. It retries once only for Wrangler’s explicit local-worker-restart response. A real MetaMask popup and hosted wallet sign-in still need an extension-browser check.
+
+To update the existing Cloudflare Worker from PowerShell, stop any local preview first, then run:
+
+```powershell
+git pull --ff-only origin main
+$env:CLOUDFLARE_D1_DATABASE_ID = 'dc63cd28-f4e1-4308-b202-0b09c9c4f4ad'
+pnpm build
+pnpm exec wrangler deploy --config dist/server/wrangler.json --keep-vars
+```
+
+Before deploying, confirm the generated configuration targets `metropolis-tradeguard`, DB `site-creator-d1` with that existing database ID, and R2 `site-creator-r2`. This reuses the existing storage and deployed Monad contracts.

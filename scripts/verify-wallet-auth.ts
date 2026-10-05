@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {request as httpRequest} from 'node:http';
+import {generatePrivateKey,privateKeyToAccount} from 'viem/accounts';
+import {sampleTerms} from '../lib/tradeguard/domain';
+const base=process.env.WALLET_AUTH_TEST_URL??'http://127.0.0.1:8788';
+assert.ok(['localhost','127.0.0.1'].includes(new URL(base).hostname),'Local verification only');
+const account=privateKeyToAccount(generatePrivateKey());
+async function fetch(url:string,options:RequestInit={}){return new Promise<Response>((resolve,reject)=>{const req=httpRequest(url,{method:options.method??'GET',headers:options.headers as Record<string,string>,agent:false},res=>{let text='';res.setEncoding('utf8');res.on('data',chunk=>text+=chunk);res.on('end',()=>resolve(new Response(text,{status:res.statusCode,headers:res.headers as Record<string,string>})));});req.setTimeout(15000,()=>req.destroy(new Error('Local request timed out')));req.on('error',reject);if(options.body)req.write(String(options.body));req.end();});}
+async function post(path:string,body:unknown,cookie='',origin=base){const r=await fetch(base+path,{method:'POST',headers:{Connection:'close',Origin:origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify(body)});const text=await r.text();if(r.status===503&&text.includes('worker restarted mid-request')){const retry=await fetch(base+path,{method:'POST',headers:{Connection:'close',Origin:origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify(body)});return retry;}return new Response(text,{status:r.status,headers:r.headers});}
+assert.equal((await fetch(base+'/api/orders')).status,401);
+assert.equal((await fetch(base+'/api/orders',{headers:{'oai-authenticated-user-id':'forged','oai-authenticated-user-email':'forged@example.test'}})).status,401);
+assert.equal((await post('/api/auth/challenge',{address:'bad'})).status,400);
+const challenge=await post('/api/auth/challenge',{address:account.address});assert.equal(challenge.status,200);
+const cookie=challenge.headers.get('set-cookie')!.split(';')[0];const {message}=await challenge.json() as {message:string};
+const signature=await account.signMessage({message});
+assert.equal((await post('/api/auth/verify',{message:message+'tampered',signature},cookie)).status,400);
+const wrong=privateKeyToAccount(generatePrivateKey());assert.equal((await post('/api/auth/verify',{message,signature:await wrong.signMessage({message})},cookie)).status,400);
+const attempts=await Promise.all([post('/api/auth/verify',{message,signature},cookie),post('/api/auth/verify',{message,signature},cookie)]);
+assert.equal(attempts.filter(r=>r.status===200).length,1,'Exactly one challenge claim must succeed');
+const login=attempts.find(r=>r.status===200)!;
+const session=login.headers.get('set-cookie')!.match(/tg_wallet_session=[a-f0-9]{64}/)![0];
+assert.equal((await post('/api/auth/verify',{message,signature},cookie)).status,400);
+const auth={Cookie:session};assert.equal((await fetch(base+'/api/config',{headers:auth})).status,200);
+const created=await post('/api/orders',{terms:{...sampleTerms,commodity:'Synthetic wallet-auth verification'},source:'Local wallet authentication verification only.'},session);assert.equal(created.status,201);
+const {order}=await created.json() as {order:{id:string}};
+const listed=await fetch(base+'/api/orders',{headers:auth});assert.equal(listed.status,200);assert.ok((await listed.json() as {orders:{id:string}[]}).orders.some(o=>o.id===order.id));
+assert.equal((await fetch(base+'/api/orders',{headers:{Cookie:session.slice(0,-1)+(session.endsWith('a')?'b':'a')}})).status,401);
+assert.equal((await post('/api/auth/logout',{},session)).status,200);
+assert.equal((await post('/api/orders',{terms:sampleTerms},session)).status,401);
+const secondChallenge=await post('/api/auth/challenge',{address:wrong.address});const secondCookie=secondChallenge.headers.get('set-cookie')!.split(';')[0];const secondMessage=(await secondChallenge.json() as {message:string}).message;const secondLogin=await post('/api/auth/verify',{message:secondMessage,signature:await wrong.signMessage({message:secondMessage})},secondCookie);assert.equal(secondLogin.status,200);const secondSession=secondLogin.headers.get('set-cookie')!.match(/tg_wallet_session=[a-f0-9]{64}/)![0];const secondOrders=await fetch(base+'/api/orders',{headers:{Cookie:secondSession}});assert.equal(secondOrders.status,200);assert.ok(!(await secondOrders.json() as {orders:{id:string}[]}).orders.some(o=>o.id===order.id));assert.equal((await post('/api/auth/logout',{},secondSession)).status,200);
+assert.equal((await post('/api/auth/challenge',{address:account.address},'','https://untrusted.example')).status,400);
+console.log('PASS: signed login, forged-header denial, origin checks, invalid signatures, concurrent claim/replay denial, session ownership, token tampering and logout revocation. No live wallet transactions sent.');
